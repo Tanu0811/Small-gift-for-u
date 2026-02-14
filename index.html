@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine 💖</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: radial-gradient(circle, #ff5f8f, #b3003b);
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        #start {
+            position: absolute;
+            font-size: 22px;
+            padding: 15px 30px;
+            border-radius: 30px;
+            border: none;
+            background: white;
+            color: #ff3366;
+            cursor: pointer;
+            z-index: 30;
+        }
+
+        #text {
+            position: absolute;
+            text-align: center;
+            font-size: 28px;
+            max-width: 80%;
+            opacity: 0;
+            transition: opacity 1s;
+            z-index: 10;
+            text-shadow: 0 0 10px #ff99aa;
+        }
+
+        #photo {
+            position: absolute;
+            width: 80%;
+            max-width: 320px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 1s;
+            z-index: 5;
+        }
+
+        #bigHeart {
+            position: absolute;
+            font-size: 120px;
+            opacity: 0;
+            z-index: 20;
+            animation: beat 1.2s infinite;
+        }
+
+        @keyframes beat {
+            0%,100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.3);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="start">Chạm để bắt đầu 💕</button>
+
+    <div id="text"></div>
+    <img id="photo">
+    <div id="bigHeart">❤️</div>
+
+    <!-- YOUTUBE EMBED CHUẨN -->
+    <iframe id="ytplayer"
+            width="0"
+            height="0"
+            src="https://www.youtube.com/embed/xTa4DARbxoI?enablejsapi=1&playsinline=1"
+            frameborder="0"
+            allow="autoplay">
+    </iframe>
+
+    <script>
+        let player;
+        let ready = false;
+
+        const text = document.getElementById("text");
+        const photo = document.getElementById("photo");
+        const start = document.getElementById("start");
+        const bigHeart = document.getElementById("bigHeart");
+
+        const messages = [
+            "❤️ Anh có điều muốn nói…",
+            "💌 Trước khi gặp em, thế giới của anh rất nhạt nhòa…",
+            "✨ Em đã khiến mọi thứ trở nên có ý nghĩa",
+            "Em không chê anh là một thằng sinh viên tập tành khởi nghiệp làm đa cấp",
+            "Không chê anh không có quá nhiều tài chính, nhiều tật xấu những vẫn bên cạnh động viên và cổ vũ anh",
+            "Nếu anh muốn lấy lại 1 thứ từ quá khứ, anh ước mình có thể khóc lần nữa, những giọt nước mắt hạnh phúc khi trải qua mọi khoảnh khắc cùng em",
+            "anh biết em anti romantic, nhưng anh cũng không quá giỏi bày tỏ cảm xúc bằng lời nói, nên hãy để hành động của anh thay thế nha",
+            "💖 Cảm ơn em vì đã đến bên anh",
+            "💖 Anh yêu em rất nhiều"
+        ];
+
+
+        const images = [
+            "images/1.jpg",
+            "images/2.jpg",
+            "images/3.jpg",
+            "images/4.jpg",
+            "images/5.jpg",
+            "images/6.jpg",
+            "images/7.jpg",
+            "images/8.jpg",
+            "images/9.jpg",
+            "images/10.jpg",
+            "images/11.jpg",
+            "images/12.jpg",
+            "images/13.jpg",
+            "images/14.jpg",
+            "images/15.jpg",
+            "images/16.jpg"
+        ];
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        let step = 0;
+        let imgIndex = 0;
+        let msgIndex = 0;
+        const chorusTime = 105;
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytplayer', {
+                events: {
+                    onReady: () => ready = true
+                }
+            });
+        }
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        document.body.appendChild(tag);
+        shuffle(images);
+        function showSequence() {
+            const interval = setInterval(() => {
+                if (imgIndex >= images.length && msgIndex >= messages.length) return;
+                if (player.getCurrentTime() >= chorusTime) {
+                    clearInterval(interval);
+                    text.style.opacity = 0;
+                    photo.style.opacity = 0;
+                    setTimeout(() => bigHeart.style.opacity = 1, 1000);
+                    return;
+                }
+
+                text.style.opacity = 0;
+                photo.style.opacity = 0;
+
+                setTimeout(() => {
+                    if (step % 3 === 0 && msgIndex < messages.length) {
+                        text.innerHTML = messages[msgIndex++];
+                        text.style.opacity = 1;
+                    } else {
+                        photo.src = images[imgIndex];
+                        imgIndex++;
+                        photo.style.opacity = 1;
+                    }
+                    step++;
+                }, 800);
+
+            }, 4400);
+        }
+
+        start.addEventListener("click", () => {
+            if (!ready) return;
+            start.style.display = "none";
+            player.playVideo();
+            showSequence();
+        });
+    </script>
+
+</body>
+</html>
